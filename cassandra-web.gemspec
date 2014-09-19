@@ -4,7 +4,7 @@ $: << File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = 'cassandra-web'
-  s.version       = '0.1.0'
+  s.version       = '0.1.1'
   s.authors       = ['Bulat Shakirzyanov']
   s.email         = ['bulat.shakirzyanov@datastax.com']
   s.homepage      = 'https://github.com/avalanche123/cassandra-web'
