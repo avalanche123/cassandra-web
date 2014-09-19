@@ -1,0 +1,40 @@
+<h1 class="page-header">Keyspace: {{keyspace.name}}</h1>
+<tabset>
+  <tab>
+    <tab-heading>Tables</tab-heading>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th class="table-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="table in keyspace.tables" ng-controller="actions">
+          <td><a href="/{{keyspace.name}}/{{table.name}}">{{table.name}}</a></td>
+          <td>
+            <button type="button" class="btn btn-xs btn-danger" ng-click="drop(keyspace.name, table.name)" ng-disabled="disabled"><span class="glyphicon glyphicon-minus"></span> Delete</button>
+            <a class="text-danger" ng-show="error" tooltip="{{error.message}}" tooltip-trigger="mouseenter" tooltip-placement="left"><span class="glyphicon glyphicon-exclamation-sign"></span></a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Total: {{keyspace.tables.length}} tables</td>
+          <td>
+            <button type="button" class="btn btn-xs btn-success" ng-click="show_execute_form('CREATE TABLE ' + keyspace.name + '.<table> (
+  <column> <type>,
+  PRIMARY KEY (<column>)
+)')"><span class="glyphicon glyphicon-plus"></span> Create</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </tab>
+  <tab>
+    <tab-heading>Definition</tab-heading>
+    <p>
+      <pre class="highlight"><code-highlight language="cql" code="{{keyspace.cql}}" /></pre>
+    </p>
+  </tab>
+</tabset>

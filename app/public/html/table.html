@@ -1,0 +1,67 @@
+<h1 class="page-header">Table: {{keyspace.name}}.{{table.name}}</h1>
+<tabset>
+  <tab>
+    <tab-heading>Rows <span class="badge">{{result.rows.length}}</span></tab-heading>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th ng-repeat="column in table.columns">{{column.name}}</th>
+          <th class="row-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="row in result.rows">
+          <td ng-repeat="column in table.columns">
+            {{row[column.name]}}
+          </td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+              <button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus"></span> Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="{{table.columns.length}}">
+            <span ng-show="!result && !error">Loading...</span>
+            <span ng-show="result">Total: {{result.rows.length}} results</span>
+            <dl ng-show="error">
+              <dt>{{error.class}}: {{error.message}}</dt>
+              <dd ng-repeat="entry in error.trace track by $index">{{entry}}</dd>
+            </dl>
+          </td>
+          <td>
+            <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span> Create</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </tab>
+  <tab heading="Columns">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Order</th>
+          <th>Options</th>
+        </tr>
+      <thead>
+      <tbody>
+        <tr ng-repeat="column in table.columns">
+          <td>{{column.name}}</td>
+          <td>{{column.type}}</td>
+          <td>{{column.order}}</td>
+          <td>{{column.options}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </tab>
+  <tab heading="Definition">
+    <p>
+      <pre class="highlight"><code-highlight language="cql" code="{{table.cql}}" /></pre>
+    </p>
+  </tab>
+</tabset>

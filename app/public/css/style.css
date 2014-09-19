@@ -1,0 +1,30 @@
+body {
+  margin-top: 50px;
+}
+
+.nav,
+.pagination,
+.carousel,
+.panel-title a {
+  cursor: pointer;
+}
+
+.statement-editor {
+  padding: 0;
+}
+
+.highlight {
+  background-color: #fdf6e3;
+}
+
+th.row-actions {
+  width: 145px;
+}
+
+th.table-actions {
+  width: 100px;
+}
+
+.modal-content .rows {
+  overflow: auto;
+}

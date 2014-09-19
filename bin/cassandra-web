@@ -1,0 +1,89 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'logger'
+require 'thread'
+
+class CLI
+  module Helpers
+    def cluster
+      settings.cluster
+    end
+
+    def session
+      settings.session
+    end
+  end
+
+  def initialize(env, out)
+    @env     = env
+    @out     = out
+    @parser  = OptionParser.new
+    @options = {
+      :bind      => '0.0.0.0:3000',
+      :log_level => 'debug'
+    }
+
+    option(:bind,        '-B', '--bind BIND',        String,  'ip:port or path for cassandra web to bind on')
+    option(:hosts,       '-H', '--hosts HOSTS',      String,  'coma-separated list of cassandra hosts')
+    option(:port,        '-P', '--port PORT',        Integer, 'integer port that cassandra is running on')
+    option(:username,    '-u', '--username USER',    String,  'username to use when connecting to cassandra')
+    option(:password,    '-p', '--password PASS',    String,  'password to use when connecting to cassandra')
+    option(:compression, '-C', '--compression NAME', String,  'compression algorithm to use (lz4 or snappy)')
+    option(:log_level,   '-L', '--log-level LEVEL',  String,  'log level')
+
+    @parser.on('-h', '--help', 'Show help') { show_help }
+  end
+
+  def run(argv)
+    @parser.parse!(argv)
+
+    require 'thin'
+    require File.expand_path('../../', __FILE__) + '/app.rb'
+
+    options = {}
+
+    @options.each do |name, value|
+      value = case name
+      when :hosts       then value.split(',').map!(&:strip)
+      when :compression then value.downcase.to_sym
+      when :port, :username, :password
+      when :log_level
+        name   = :logger
+        Logger.new(@out).tap do |logger|
+          logger.level = Logger.const_get(value.upcase.to_sym)
+        end
+      else
+        next
+      end
+
+      options[name] = value
+    end
+
+    cluster = ::Cassandra.connect(options)
+
+    App.set(:cluster, cluster)
+    App.set(:session, cluster.connect)
+
+    App.helpers Helpers
+
+    Thin::Server.start(*@options[:bind].split(':'), App)
+  rescue => e
+    puts "#{e.class.name}: #{e.message}"
+    puts ""
+    show_help
+  end
+
+  private
+
+  def option(name, *args)
+    @parser.on(*args) {|v| @options[name] = v}
+  end
+
+  def show_help
+    puts @parser
+    exit 1
+  end
+end
+
+CLI.new(ENV, $stderr).run(ARGV)

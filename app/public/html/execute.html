@@ -1,0 +1,112 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" ng-click="$close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h4 class="modal-title">Execute CQL</h4>
+</div>
+<div class="modal-body statement-editor">
+  <div ui-codemirror ui-codemirror-opts="{mode: 'text/x-cassandra', theme: 'solarized light', lineWrapping: true, lineNumbers: true, autofocus: true}" ng-model="statement.cql" rows="3"></div>
+  <div ng-show="result">
+    <dl>
+      <dt>Rows</dt>
+      <dd class="rows">
+        <table class="table table-striped table-hover">
+          <thead ng-show="result.columns.length > 0">
+            <tr>
+              <th ng-repeat="column in result.columns">{{column}}</th>
+            </tr>
+          </thead>
+          <tbody ng-show="result.columns.length > 0">
+            <tr ng-repeat="row in result.rows">
+              <td ng-repeat="column in result.columns">
+                {{row[column]}}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr ng-show="result.columns.length > 0">
+              <td colspan="{{result.columns.length}}">
+                Total: {{result.rows.length}} results
+              </td>
+            </tr>
+            <tr ng-show="result.columns.length == 0">
+              <td>
+                Total: {{result.rows.length}} results
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </dd>
+
+      <dt>Execution Info</dt>
+      <dd>
+        <dl class="dl-horizontal">
+          <dt>Statement</dt>
+          <dd>{{result.info.statement.cql}}</dd>
+
+          <dt>Retries</dt>
+          <dd>{{result.info.retries}}</dd>
+
+          <dt>Hosts</dt>
+          <dd>
+            <span ng-repeat="host in result.info.hosts">{{host.ip}}</span>
+          </dd>
+        </dl>
+      </dd>
+
+      <dt ng-show="result.info.trace">Trace</dt>
+      <dd ng-show="result.info.trace">
+        <dl class="dl-horizontal">
+          <dt>Request</dt>
+          <dd>{{result.info.trace.request}}</dd>
+
+          <dt>Parameters</dt>
+          <dd>{{result.info.trace.parameters}}</dd>
+
+          <dt>Coordinator</dt>
+          <dd>{{result.info.trace.coordinator}}</dd>
+
+          <dt>Started</dt>
+          <dd>{{result.info.trace.started_at}}</dd>
+        </dl>
+      </dd>
+      <dd ng-show="result.info.trace">
+        <h5>Trace Events</h5>
+
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Activity</th>
+              <th>Elapsed</th>
+              <th>Thread</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="event in result.info.trace.events">
+              <td>{{event.source}}</td>
+              <td>{{event.activity}}</td>
+              <td>{{event.source_elapsed}}</td>
+              <td>{{event.thread}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </div>
+</div>
+<div class="modal-footer">
+  <form class="form-inline" role="form" ng-submit="execute()">
+    <div class="checkbox">
+      <label for="consistency">Consistency</label>
+      <select id="consistency" class="form-control" ng-model="options.consistency" ng-options="consistency for consistency in consistencies"></select>
+    </div>
+    <div class="checkbox">
+      <label for="trace">
+        <input id="trace" type="checkbox" ng-model="options.trace" /> <span ng-if="!options.trace">Enable</span><span ng-if="options.trace">Disable</span> Tracing
+      </label>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-danger" ng-disabled="disabled">Execute</button>
+      <a class="text-danger" ng-show="error" tooltip="{{error.class}}: {{error.message}}" tooltip-trigger="mouseenter" tooltip-placement="left"><span class="glyphicon glyphicon-exclamation-sign"></span></a>
+    </div>
+  </form>
+</div>
