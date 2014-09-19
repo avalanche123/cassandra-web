@@ -77,7 +77,7 @@ class App < Sinatra::Base
       statement.chomp!(";")
 
       options = {
-        :consistency => :quorum,
+        :consistency => :one,
         :trace => false
       }
 
