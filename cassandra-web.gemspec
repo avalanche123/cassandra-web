@@ -4,7 +4,7 @@ $: << File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = 'cassandra-web'
-  s.version       = '0.1.1'
+  s.version       = '0.2.0'
   s.authors       = ['Bulat Shakirzyanov']
   s.email         = ['bulat.shakirzyanov@datastax.com']
   s.homepage      = 'https://github.com/avalanche123/cassandra-web'
@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_runtime_dependency 'cassandra-driver', '= 1.0.0.beta.1'
-  s.add_runtime_dependency 'thin',             '= 1.6.2'
-  s.add_runtime_dependency 'rack-cors',        '= 0.2.9'
-  s.add_runtime_dependency 'rack-parser',      '= 0.6.0'
-  s.add_runtime_dependency 'sinatra',          '= 1.4.5'
+  s.add_runtime_dependency 'cassandra-driver', '~> 1.0.0.beta'
+  s.add_runtime_dependency 'thin',             '~> 1.6'
+  s.add_runtime_dependency 'rack-cors',        '~> 0.2'
+  s.add_runtime_dependency 'rack-parser',      '~> 0.6'
+  s.add_runtime_dependency 'sinatra',          '~> 1.4'
 
   s.add_development_dependency 'bundler', '~> 1.6'
   s.add_development_dependency 'rake', '~> 10.0'

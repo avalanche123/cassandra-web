@@ -1,21 +1,21 @@
 PATH
   remote: .
   specs:
-    cassandra-web (0.1.0)
-      cassandra-driver (= 1.0.0.beta.1)
-      rack-cors (= 0.2.9)
-      rack-parser (= 0.6.0)
-      sinatra (= 1.4.5)
-      thin (= 1.6.2)
+    cassandra-web (0.2.0)
+      cassandra-driver (~> 1.0.0.beta)
+      rack-cors (~> 0.2)
+      rack-parser (~> 0.6)
+      sinatra (~> 1.4)
+      thin (~> 1.6)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    cassandra-driver (1.0.0.beta.1)
-      ione (~> 1.0)
+    cassandra-driver (1.0.0.beta.3)
+      ione (~> 1.2.0.pre4)
     daemons (1.1.9)
     eventmachine (1.0.3)
-    ione (1.1.4)
+    ione (1.2.0.pre4)
     rack (1.5.2)
     rack-cors (0.2.9)
     rack-parser (0.6.0)
@@ -27,10 +27,10 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    thin (1.6.2)
-      daemons (>= 1.0.9)
-      eventmachine (>= 1.0.0)
-      rack (>= 1.0.0)
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
     tilt (1.4.1)
 
 PLATFORMS
