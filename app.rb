@@ -71,42 +71,21 @@ class App < Sinatra::Base
   post '/execute/?' do
     content_type 'application/json'
 
-    begin
-      statement = params['statement']
-      statement.strip!
-      statement.chomp!(";")
+    statement = params['statement']
+    statement.strip!
+    statement.chomp!(";")
 
-      options = {
-        :consistency => :one,
-        :trace => false
-      }
+    options = {
+      :consistency => :one,
+      :trace => false
+    }
 
-      if params['options']
-        options[:trace]       = !!params['options']['trace'] if params['options'].has_key?('trace')
-        options[:consistency] = params['options']['consistency'].to_sym if params['options'].has_key?('consistency') && Cassandra::CONSISTENCIES.include?(params['options']['consistency'].to_sym)
-      end
-
-      status 200
-      json_dump(session.execute(statement, options))
-    rescue Cassandra::Errors::NoHostsAvailable => e
-      status 503
-      json_dump(e)
-    rescue Cassandra::Errors::AuthenticationError => e
-      status 401
-      json_dump(e)
-    rescue Cassandra::Errors::UnauthorizedError => e
-      status 403
-      json_dump(e)
-    rescue Cassandra::Errors::ExecutionError => e
-      status 504
-      json_dump(e)
-    rescue Cassandra::Error => e
-      status 400
-      json_dump(e)
-    rescue => e
-      status 500
-      json_dump(e)
+    if params['options']
+      options[:trace]       = !!params['options']['trace'] if params['options'].has_key?('trace')
+      options[:consistency] = params['options']['consistency'].to_sym if params['options'].has_key?('consistency') && Cassandra::CONSISTENCIES.include?(params['options']['consistency'].to_sym)
     end
+
+    defer(session.execute_async(statement, options))
   end
 
   get '*' do
@@ -114,8 +93,10 @@ class App < Sinatra::Base
   end
 end
 
+require 'app/helpers/async'
 require 'app/helpers/json'
 require 'app/helpers/sse'
 
+App.helpers  App::Helpers::Async
 App.helpers  App::Helpers::JSON
 App.helpers  App::Helpers::SSE
