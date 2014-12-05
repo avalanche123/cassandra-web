@@ -39,7 +39,7 @@ class App
         end
       end
 
-      def send_events(out)
+      def stream_events(out)
         listener  = Streamer.new(out)
         heartbeat = EM.add_periodic_timer(2) { out << "\n" }
 

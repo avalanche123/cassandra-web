@@ -21,16 +21,16 @@ class CLI
     @parser  = OptionParser.new
     @options = {
       :bind      => '0.0.0.0:3000',
-      :log_level => 'debug'
+      :log_level => 'info'
     }
 
-    option(:bind,        '-B', '--bind BIND',        String,  'ip:port or path for cassandra web to bind on')
-    option(:hosts,       '-H', '--hosts HOSTS',      String,  'coma-separated list of cassandra hosts')
-    option(:port,        '-P', '--port PORT',        Integer, 'integer port that cassandra is running on')
+    option(:bind,        '-B', '--bind BIND',        String,  'ip:port or path for cassandra web to bind on (default: 0.0.0.0:3000)')
+    option(:hosts,       '-H', '--hosts HOSTS',      String,  'coma-separated list of cassandra hosts (default: 127.0.0.1)')
+    option(:port,        '-P', '--port PORT',        Integer, 'integer port that cassandra is running on (default: 9042)')
+    option(:log_level,   '-L', '--log-level LEVEL',  String,  'log level (default: info)')
     option(:username,    '-u', '--username USER',    String,  'username to use when connecting to cassandra')
     option(:password,    '-p', '--password PASS',    String,  'password to use when connecting to cassandra')
     option(:compression, '-C', '--compression NAME', String,  'compression algorithm to use (lz4 or snappy)')
-    option(:log_level,   '-L', '--log-level LEVEL',  String,  'log level')
 
     @parser.on('-h', '--help', 'Show help') { show_help }
   end
@@ -45,14 +45,17 @@ class CLI
 
     @options.each do |name, value|
       value = case name
-      when :hosts       then value.split(',').map!(&:strip)
-      when :compression then value.downcase.to_sym
-      when :port, :username, :password
+      when :port, :username, :password # skip as is
+      when :hosts
+        value.split(',').map!(&:strip)
+      when :compression
+        value.downcase.to_sym
       when :log_level
-        name   = :logger
-        Logger.new(@out).tap do |logger|
-          logger.level = Logger.const_get(value.upcase.to_sym)
-        end
+        name = :logger
+
+        logger       = Logger.new(@out)
+        logger.level = Logger.const_get(value.upcase.to_sym)
+        logger
       else
         next
       end
@@ -60,7 +63,7 @@ class CLI
       options[name] = value
     end
 
-    cluster = ::Cassandra.connect(options)
+    cluster = ::Cassandra.cluster(options)
 
     App.set(:cluster, cluster)
     App.set(:session, cluster.connect)

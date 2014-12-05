@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     cassandra-web (0.2.0)
-      cassandra-driver (~> 1.0.0.beta)
+      cassandra-driver (~> 1.0)
       rack-cors (~> 0.2)
       rack-parser (~> 0.6)
       sinatra (~> 1.4)
@@ -11,14 +11,14 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    cassandra-driver (1.0.0.beta.3)
-      ione (~> 1.2.0.pre4)
+    cassandra-driver (1.0.0)
+      ione (~> 1.2)
     daemons (1.1.9)
     eventmachine (1.0.3)
-    ione (1.2.0.pre4)
+    ione (1.2.0)
     rack (1.5.2)
     rack-cors (0.2.9)
-    rack-parser (0.6.0)
+    rack-parser (0.6.1)
       rack
     rack-protection (1.5.3)
       rack

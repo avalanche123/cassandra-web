@@ -17,10 +17,6 @@ class App
           keyspace_hash(object)
         when ::Cassandra::Result
           result_hash(object)
-        when ::Cassandra::Errors::NoHostsAvailable
-          no_hosts_available_error_hash(object)
-        when ::Cassandra::Errors::QueryError
-          query_error_hash(object)
         when ::Exception
           error_hash(object)
         when ::Hash
@@ -159,19 +155,88 @@ class App
       end
 
       def error_hash(error)
-        {
-          :class   => error.class.name,
-          :message => error.message,
-          :trace    => error.backtrace
-        }
+        case error
+        when ::Cassandra::Errors::NoHostsAvailable
+          no_hosts_available_error_hash(error)
+        when ::Cassandra::Errors::ReadTimeoutError
+          read_timeout_error_hash(error)
+        when ::Cassandra::Errors::WriteTimeoutError
+          write_timeout_error_hash(error)
+        when ::Cassandra::Errors::UnavailableError
+          unavailable_error_hash(error)
+        when ::Cassandra::Errors::UnpreparedError
+          unprepared_error_hash(error)
+        when ::Cassandra::Errors::AlreadyExistsError
+          already_exists_error_hash(error)
+        when ::Cassandra::Errors::ExecutionError, ::Cassandra::Errors::ValidationError
+          execution_error_hash(error)
+        else
+          {
+            :class   => error.class.name,
+            :message => error.message,
+            :trace   => error.backtrace
+          }
+        end
       end
 
-      def query_error_hash(error)
-        error_hash(error)
+      def execution_error_hash(error)
+        hash = error_hash(error)
+        hash[:statement] = statement_hash(error.statement)
+        hash
+      end
+
+      def already_exists_error_hash(error)
+        hash = execution_error_hash(error)
+        hash[:keyspace] = error.keyspace
+        hash[:table]    = error.table
+        hash
+      end
+
+      def unprepared_error_hash(error)
+        hash = execution_error_hash(error)
+        hash[:id] = error.id
+        hash
+      end
+
+      def read_timeout_error_hash(error)
+        hash = execution_error_hash(error)
+        hash[:retrieved]   = error.retrieved?
+        hash[:consistency] = error.consistency
+        hash[:required]    = error.required
+        hash[:received]    = error.received
+        hash
+      end
+
+      def write_timeout_error_hash(error)
+        hash = execution_error_hash(error)
+        hash[:type]        = error.type
+        hash[:consistency] = error.consistency
+        hash[:required]    = error.required
+        hash[:received]    = error.received
+        hash
+      end
+
+      def unavailable_error_hash(error)
+        hash = execution_error_hash(error)
+        hash[:consistency] = error.consistency
+        hash[:required]    = error.required
+        hash[:alive]       = error.alive
+        hash
       end
 
       def no_hosts_available_error_hash(error)
-        error_hash(error)
+        hash = error_hash(error)
+        errors = []
+
+        error.errors.each do |host, e|
+          errors << {
+            :host  => host_hash(host),
+            :error => error_hash(e)
+          }
+        end
+
+        hash[:errors] = errors
+        hash
       end
     end
   end

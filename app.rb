@@ -43,7 +43,7 @@ class App < Sinatra::Base
     headers 'Connection' => 'keep-alive'
 
     stream(:keep_open) do |out|
-      send_events(out)
+      stream_events(out)
     end
   end
 
@@ -91,7 +91,16 @@ class App < Sinatra::Base
     rescue Cassandra::Errors::NoHostsAvailable => e
       status 503
       json_dump(e)
-    rescue Cassandra::Errors::QueryError => e
+    rescue Cassandra::Errors::AuthenticationError => e
+      status 401
+      json_dump(e)
+    rescue Cassandra::Errors::UnauthorizedError => e
+      status 403
+      json_dump(e)
+    rescue Cassandra::Errors::ExecutionError => e
+      status 504
+      json_dump(e)
+    rescue Cassandra::Error => e
       status 400
       json_dump(e)
     rescue => e
