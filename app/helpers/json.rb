@@ -18,7 +18,7 @@ class App
         when ::Cassandra::Result
           result_hash(object)
         when ::Exception
-          error_hash(object)
+          exception_hash(object)
         when ::Hash
           hash = ::Hash.new
           object.each do |key, value|
@@ -94,14 +94,14 @@ class App
       def result_hash(result)
         {
           :rows    => result.map(&method(:object_hash)),
-          :columns => columns_hash(result.first),
+          :columns => columns_hash(result),
           :info    => execution_info_hash(result.execution_info),
         }
       end
 
-      def columns_hash(row)
-        return [] if row.nil?
-        row.keys
+      def columns_hash(rows)
+        return [] if rows.empty?
+        rows.first.keys
       end
 
       def execution_info_hash(execution_info)
@@ -171,16 +171,20 @@ class App
         when ::Cassandra::Errors::ExecutionError, ::Cassandra::Errors::ValidationError
           execution_error_hash(error)
         else
-          {
-            :class   => error.class.name,
-            :message => error.message,
-            :trace   => error.backtrace
-          }
+          exception_hash(error)
         end
       end
 
+      def exception_hash(error)
+        {
+          :class   => error.class.name,
+          :message => error.message,
+          :trace   => error.backtrace
+        }
+      end
+
       def execution_error_hash(error)
-        hash = error_hash(error)
+        hash = exception_hash(error)
         hash[:statement] = statement_hash(error.statement)
         hash
       end
@@ -225,7 +229,7 @@ class App
       end
 
       def no_hosts_available_error_hash(error)
-        hash = error_hash(error)
+        hash = exception_hash(error)
         errors = []
 
         error.errors.each do |host, e|
