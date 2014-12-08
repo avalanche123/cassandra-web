@@ -32,6 +32,8 @@ CREATE KEYSPACE example WITH replication = {'class': 'SimpleStrategy', 'replicat
 
 If the statement executed successfully, you should see a new keyspace show up on the left side of the UI.
 
+![Alt text](/animation.gif?raw=true "Create Keyspace")
+
 The web server, Thin, used by `cassandra-web` is asynchronous and uses only a single thread to handle requests. This enables efficient handling multiple of long running connections, which is a requirement for streaming and Server Sent Events, but also means that the application cannot perform blocking operations during request handling, since it would hang up all connections for the duration of the blocking operation. `cassandra-web` therefore uses Asynchronous Execution feature of the Ruby Driver to not block on statements execution. [The application executes statements asynchronously, receiving a future from the Ruby Driver](https://github.com/avalanche123/cassandra-web/blob/master/app.rb#L88). [It then registers future completion listeners to send a response (or error) whenever it becomes available](https://github.com/avalanche123/cassandra-web/blob/master/app/helpers/async.rb#L7-L40).
 
 ## Credits
