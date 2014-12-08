@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rack-cors',        '~> 0.2'
   s.add_runtime_dependency 'rack-parser',      '~> 0.6'
   s.add_runtime_dependency 'sinatra',          '~> 1.4'
+  s.add_runtime_dependency 'lz4-ruby',         '~> 0.3'
 
   s.add_development_dependency 'bundler', '~> 1.6'
   s.add_development_dependency 'rake', '~> 10.0'

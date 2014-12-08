@@ -3,6 +3,7 @@ PATH
   specs:
     cassandra-web (0.2.0)
       cassandra-driver (~> 1.0)
+      lz4-ruby (~> 0.3)
       rack-cors (~> 0.2)
       rack-parser (~> 0.6)
       sinatra (~> 1.4)
@@ -16,6 +17,7 @@ GEM
     daemons (1.1.9)
     eventmachine (1.0.3)
     ione (1.2.0)
+    lz4-ruby (0.3.3)
     rack (1.5.2)
     rack-cors (0.2.9)
     rack-parser (0.6.1)

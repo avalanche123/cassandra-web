@@ -31,6 +31,10 @@ class CLI
     option(:username,    '-u', '--username USER',    String,  'username to use when connecting to cassandra')
     option(:password,    '-p', '--password PASS',    String,  'password to use when connecting to cassandra')
     option(:compression, '-C', '--compression NAME', String,  'compression algorithm to use (lz4 or snappy)')
+    option(:server_cert, '--server-cert PATH',       String,  'server ceritificate pathname')
+    option(:client_cert, '--client-cert PATH',       String,  'client ceritificate pathname')
+    option(:private_key, '--private-key PATH',       String,  'path to private key')
+    option(:passphrase,  '--passphrase SECRET',      String,  'passphrase for the private key')
 
     @parser.on('-h', '--help', 'Show help') { show_help }
   end
@@ -62,6 +66,13 @@ class CLI
 
       options[name] = value
     end
+
+    hosts = Array(options[:hosts])
+    hosts << '127.0.0.1' if hosts.empty?
+
+    options[:load_balancing_policy] = ::Cassandra::LoadBalancing::Policies::WhiteList.new(hosts, ::Cassandra::LoadBalancing::Policies::RoundRobin.new)
+    options[:compression]           = :lz4
+    options[:page_size]             = nil
 
     cluster = ::Cassandra.cluster(options)
 
