@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_runtime_dependency 'cassandra-driver', '~> 1.0'
+  s.add_runtime_dependency 'cassandra-driver', '~> 1.1'
   s.add_runtime_dependency 'thin',             '~> 1.6'
   s.add_runtime_dependency 'rack-cors',        '~> 0.2'
   s.add_runtime_dependency 'rack-parser',      '~> 0.6'
