@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Cassandra-web by avalanche123</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Cassandra-web</h1>
+        <h2>A web interface for Apache Cassandra</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/avalanche123/cassandra-web/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/avalanche123/cassandra-web/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/avalanche123/cassandra-web" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="cassandra-web" class="anchor" href="#cassandra-web" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cassandra Web</h1>
+
+<p>A web interface to Apache Cassandra with AngularJS and server-sent events.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-bash"><pre>$ gem install cassandra-web</pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-bash"><pre>$ cassandra-web</pre></div>
+
+<p>Run <code>cassandra-web -h</code> for futher help.</p>
+
+<h2>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h2>
+
+<p>Cassandra web consists of an HTTP API powered by <a href="https://github.com/sinatra/sinatra">Sinatra</a> and a thin HTML5/JavaScript frontend powered by <a href="https://angularjs.org/">AngularJS</a>.</p>
+
+<p>When you run <code>cassandra-web</code> script, it starts a <a href="http://code.macournoyer.com/thin/">Thin web server</a> on a specified address, which defaults to <code>localhost:3000</code>. Openning <code>http://localhost:3000</code>, or whatever address you've specified in the browser, loads the AngularJS application and it starts interacting with the HTTP API of <code>cassandra-web</code>. This api uses the <a href="http://datastax.github.io/ruby-driver/">Ruby Driver</a> to communicate with an <a href="http://cassandra.apache.org/">Apache Cassandra</a> cluster.</p>
+
+<p>When the frontend has fully loaded, <a href="https://github.com/avalanche123/cassandra-web/blob/master/app/public/js/cassandra.js#L108">it subscribes to <code>/events</code> API endpoint</a>, and begins receiving <a href="http://www.w3.org/TR/2012/WD-eventsource-20120426/">Server Sent Events</a>. <a href="https://github.com/avalanche123/cassandra-web/blob/master/app/helpers/sse.rb#L43-L56">The API uses an event listener, which is registered with the <code>Cluster</code> instance created by the Ruby Driver, to stream events</a> such as <a href="https://github.com/avalanche123/cassandra-web/blob/master/app/helpers/sse.rb#L29-L39">schema</a> and <a href="https://github.com/avalanche123/cassandra-web/blob/master/app/helpers/sse.rb#L13-L27">node status</a> changes to update the user interface without having to refresh the page.</p>
+
+<p>You can see this feature in action by creating a keyspace using the execute button in the top-right corner of the UI and executing the following statement:</p>
+
+<pre lang="cql"><code>CREATE KEYSPACE example WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}
+</code></pre>
+
+<p>If the statement executed successfully, you should see a new keyspace show up on the left side of the UI.</p>
+
+<p><img src="https://raw.githubusercontent.com/avalanche123/cassandra-web/master/animation.gif" alt="Alt text" title="Create Keyspace"></p>
+
+<p>The web server, Thin, used by <code>cassandra-web</code> is asynchronous and uses only a single thread to handle requests. This enables efficient handling multiple of long running connections, which is a requirement for streaming and Server Sent Events, but also means that the application cannot perform blocking operations during request handling, since it would hang up all connections for the duration of the blocking operation. <code>cassandra-web</code> therefore uses Asynchronous Execution feature of the Ruby Driver to not block on statements execution. <a href="https://github.com/avalanche123/cassandra-web/blob/master/app.rb#L88">The application executes statements asynchronously, receiving a future from the Ruby Driver</a>. <a href="https://github.com/avalanche123/cassandra-web/blob/master/app/helpers/async.rb#L7-L40">It then registers future completion listeners to send a response (or error) whenever it becomes available</a>.</p>
+
+<h2>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<p>Cassandra web is possible because of the following awesome technologies (in no particular order):</p>
+
+<ul>
+<li><a href="http://cassandra.apache.org/">Apache Cassandra</a></li>
+<li><a href="http://datastax.github.io/ruby-driver/">DataStax Ruby Driver for Apache Cassandra</a></li>
+<li><a href="https://github.com/sinatra/sinatra">Sinatra</a></li>
+<li><a href="https://angularjs.org/">AngularJS</a></li>
+<li><a href="http://getbootstrap.com/">Twitter Bootstrap</a></li>
+<li><a href="http://code.macournoyer.com/thin/">Thin</a></li>
+<li><a href="http://www.w3.org/TR/2012/WD-eventsource-20120426/">Server Sent Events</a></li>
+<li><a href="http://prismjs.com/">PrismJS</a></li>
+<li><a href="http://codemirror.net/">CodeMirror</a></li>
+<li>and many others...</li>
+</ul>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
