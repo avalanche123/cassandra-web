@@ -5,13 +5,13 @@ A web interface to Apache Cassandra with AngularJS and server-sent events.
 ## Installation
 
 ```bash
-gem install cassandra-web
+$ gem install cassandra-web
 ```
 
 ## Usage
 
 ```bash
-cassandra-web
+$ cassandra-web
 ```
 
 Run `cassandra-web -h` for futher help.
