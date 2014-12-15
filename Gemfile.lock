@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cassandra-web (0.2.0)
+    cassandra-web (0.3.0)
       cassandra-driver (~> 1.1)
       lz4-ruby (~> 0.3)
       rack-cors (~> 0.2)
