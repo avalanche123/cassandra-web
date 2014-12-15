@@ -24,7 +24,7 @@ GEM
       rack
     rack-protection (1.5.3)
       rack
-    rake (10.3.2)
+    rake (10.4.2)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
