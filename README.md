@@ -5,16 +5,28 @@ A web interface to Apache Cassandra with AngularJS and server-sent events.
 ## Installation
 
 ```bash
-$ gem install cassandra-web
+gem install cassandra-web
 ```
 
 ## Usage
 
+Run `cassandra-web -h` for help.
+
+### Quick Start
+
 ```bash
-$ cassandra-web
+cassandra-web
 ```
 
-Run `cassandra-web -h` for futher help.
+### Connect to a Cassandra Cluster requiring authentication
+
+```bash
+cassandra-web --hosts '10.0.2.2' --port '9042' --username 'cassweb' --password 'myPassword'
+```
+
+
+
+
 
 ## How it works
 
@@ -40,13 +52,13 @@ The web server, Thin, used by `cassandra-web` is asynchronous and uses only a si
 
 Cassandra web is possible because of the following awesome technologies (in no particular order):
 
-  * [Apache Cassandra](http://cassandra.apache.org/)
-  * [DataStax Ruby Driver for Apache Cassandra](http://datastax.github.io/ruby-driver/)
-  * [Sinatra](https://github.com/sinatra/sinatra)
-  * [AngularJS](https://angularjs.org/)
-  * [Twitter Bootstrap](http://getbootstrap.com/)
-  * [Thin](http://code.macournoyer.com/thin/)
-  * [Server Sent Events](http://www.w3.org/TR/2012/WD-eventsource-20120426/)
-  * [PrismJS](http://prismjs.com/)
-  * [CodeMirror](http://codemirror.net/)
-  * and many others...
+* [Apache Cassandra](http://cassandra.apache.org/)
+* [DataStax Ruby Driver for Apache Cassandra](http://datastax.github.io/ruby-driver/)
+    * [Sinatra](https://github.com/sinatra/sinatra)
+    * [AngularJS](https://angularjs.org/)
+    * [Twitter Bootstrap](http://getbootstrap.com/)
+    * [Thin](http://code.macournoyer.com/thin/)
+    * [Server Sent Events](http://www.w3.org/TR/2012/WD-eventsource-20120426/)
+    * [PrismJS](http://prismjs.com/)
+    * [CodeMirror](http://codemirror.net/)
+    * and many others...
