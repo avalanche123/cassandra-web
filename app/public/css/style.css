@@ -28,3 +28,8 @@ th.table-actions {
 .modal-content .rows {
   overflow: auto;
 }
+
+.execute-options {
+  display: block !important;
+  padding: 5px;
+}
