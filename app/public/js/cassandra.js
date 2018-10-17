@@ -464,6 +464,8 @@ if (!Object.keys) {
           );
       };
 
+      $scope.executeStatement();
+
     }
   ]);
 
