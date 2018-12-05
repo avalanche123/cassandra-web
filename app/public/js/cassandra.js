@@ -393,6 +393,13 @@ if (!Object.keys) {
     '$location',
     'escapeIdentifier',
     function($scope, cluster, $routeParams, $location, escapeIdentifier) {
+
+      $scope.rowLimit = {
+        enabled: true,
+        value: 15
+      };
+      $scope.loading = false;
+
       cluster.keyspaces.forEach(function(keyspace) {
         if ($routeParams.keyspace == keyspace.name) {
           $scope.keyspace = keyspace
@@ -433,19 +440,34 @@ if (!Object.keys) {
         if (!exists) {
           $location.path('/' + $scope.keyspace.name)
         }
-      })
+      });
 
-      cluster.execute('SELECT * FROM ' + escapeIdentifier($scope.keyspace.name) + '.' + escapeIdentifier($scope.table.name))
-        .then(
-          function(result) {
-            $scope.result = result
-          },
-          function(error) {
-            $scope.error = error
-          }
-        )
+      $scope.executeStatement = function() {
+        $scope.result = undefined;
+        $scope.loading = true;
+
+        var selectStatement = 'SELECT * FROM ' + escapeIdentifier($scope.keyspace.name) + '.' + escapeIdentifier($scope.table.name);
+        if ($scope.rowLimit.enabled) {
+          selectStatement = selectStatement + ' LIMIT ' + $scope.rowLimit.value;
+        }
+
+        cluster.execute(selectStatement)
+          .then(
+            function(result) {
+              $scope.result = result;
+              $scope.loading = false;
+            },
+            function(error) {
+              $scope.error = error;
+              $scope.loading = false;
+            }
+          );
+      };
+
+      $scope.executeStatement();
+
     }
-  ])
+  ]);
 
   app.controller('actions', [
     '$scope',

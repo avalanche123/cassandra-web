@@ -95,16 +95,16 @@
 </div>
 <div class="modal-footer">
   <form class="form-inline" role="form" ng-submit="execute()">
-    <div class="checkbox">
+    <div class="checkbox execute-options">
       <label for="consistency">Consistency</label>
       <select id="consistency" class="form-control" ng-model="options.consistency" ng-options="consistency for consistency in consistencies"></select>
     </div>
-    <div class="checkbox">
+    <div class="checkbox execute-options">
       <label for="trace">
         <input id="trace" type="checkbox" ng-model="options.trace" /> <span ng-if="!options.trace">Enable</span><span ng-if="options.trace">Disable</span> Tracing
       </label>
     </div>
-    <div class="form-group">
+    <div class="form-group execute-options">
       <button type="submit" class="btn btn-danger" ng-disabled="disabled">Execute</button>
       <a class="text-danger" ng-show="error" tooltip="{{error.class}}: {{error.message}}" tooltip-trigger="mouseenter" tooltip-placement="left"><span class="glyphicon glyphicon-exclamation-sign"></span></a>
     </div>

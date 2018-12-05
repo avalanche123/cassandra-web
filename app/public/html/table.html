@@ -2,7 +2,23 @@
 <tabset>
   <tab>
     <tab-heading>Rows <span class="badge">{{result.rows.length}}</span></tab-heading>
-    <table class="table table-striped table-hover">
+
+    <div class="row-limit">
+      <label for="limit">Row Limit</label>
+      <input type="checkbox" title="Row Limit Checkbox" ng-model="rowLimit.enabled" value="rowLimit.enabled" />
+      <input id="limit" ng-model="rowLimit.value" ng-if="rowLimit.enabled" value="rowLimit.value" />
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-danger" ng-click="executeStatement()">Fetch Rows</button>
+    </div>
+
+    <button class="btn btn-sm btn-warning loading-button" ng-show="loading">
+      <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+      Loading...
+    </button>
+
+    <table class="table table-striped table-hover" ng-if="result || error">
       <thead>
         <tr>
           <th ng-repeat="column in table.columns">{{column.name}}</th>
@@ -25,7 +41,6 @@
       <tfoot>
         <tr>
           <td colspan="{{table.columns.length}}">
-            <span ng-show="!result && !error">Loading...</span>
             <span ng-show="result">Total: {{result.rows.length}} results</span>
             <dl ng-show="error">
               <dt>{{error.class}}: {{error.message}}</dt>
