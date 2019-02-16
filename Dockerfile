@@ -9,7 +9,7 @@ ADD entrypoint.sh /
 
 RUN \
   gem install cassandra-web && \
-  chmod a+x /entrypoint.sh \
+  chmod a+x /entrypoint.sh && \
   rm -f cassandra-web-*.gem
 
 EXPOSE 3000
