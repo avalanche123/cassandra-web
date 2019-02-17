@@ -4,11 +4,11 @@ LABEL mantainer="michele.sacchetti@aroundthecode.org" \
  app.name="cassandra-web" \
  version="0.4.1"
 
-ADD cassandra-web-*.gem /
-ADD entrypoint.sh /
+COPY cassandra-web-*.gem /
+COPY entrypoint.sh /
 
 RUN \
-  gem install cassandra-web && \
+  gem install $(ls /cassandra-web-*.gem) && \
   chmod a+x /entrypoint.sh && \
   rm -f cassandra-web-*.gem
 

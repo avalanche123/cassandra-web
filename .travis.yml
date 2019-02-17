@@ -6,7 +6,7 @@ rvm:
 
 script:
   - gem build cassandra-web.gemspec
-  - docker build . -f Dockerfile -t aroundthecode/cassandra-web:latest
+  - docker build . --no-cache -f Dockerfile -t aroundthecode/cassandra-web:latest
   - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
   - docker push aroundthecode/cassandra-web:latest
 
