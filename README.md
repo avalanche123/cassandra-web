@@ -2,6 +2,13 @@
 
 A web interface to Apache Cassandra with AngularJS and server-sent events.
 
+## Fork from base repository
+
+Main changes:
+
+* host parameter can now resolve also fqdn and not only IPs (resolution will occur only once at options loading)
+* Travis CI build + docker container integration
+
 ## Installation
 
 ```bash
@@ -62,3 +69,4 @@ Cassandra web is possible because of the following awesome technologies (in no p
     * [PrismJS](http://prismjs.com/)
     * [CodeMirror](http://codemirror.net/)
     * and many others...
+

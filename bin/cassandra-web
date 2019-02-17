@@ -3,6 +3,9 @@
 require 'optparse'
 require 'logger'
 require 'thread'
+require "resolv"
+
+
 
 class CLI
   module Helpers
@@ -25,7 +28,7 @@ class CLI
     }
 
     option(:bind,        '-B', '--bind BIND',        String,  'ip:port or path for cassandra web to bind on (default: 0.0.0.0:3000)')
-    option(:hosts,       '-H', '--hosts HOSTS',      String,  'coma-separated list of cassandra hosts (default: 127.0.0.1)')
+    option(:hosts,       '-H', '--hosts HOSTS',      String,  'comma-separated list of cassandra hosts (default: 127.0.0.1)')
     option(:port,        '-P', '--port PORT',        Integer, 'integer port that cassandra is running on (default: 9042)')
     option(:log_level,   '-L', '--log-level LEVEL',  String,  'log level (default: info)')
     option(:username,    '-u', '--username USER',    String,  'username to use when connecting to cassandra')
@@ -40,6 +43,10 @@ class CLI
   end
 
   def run(argv)
+
+    log = Logger.new(STDOUT)
+    log.level = Logger::INFO
+
     @parser.parse!(argv)
 
     require 'thin'
@@ -70,6 +77,18 @@ class CLI
 
     hosts = Array(options[:hosts])
     hosts << '127.0.0.1' if hosts.empty?
+
+    hosts.each_index do |i|
+      hosts[i] = "green" if hosts[i] == "red"
+      if hosts[i] =~ Resolv::IPv4::Regex ? true : false
+        log.info(hosts[i] + " is a regulal ip going on")
+      else
+        log.warn("considering "+ hosts[i] + " a fqdn, resolving...")
+        resolved = Resolv.getaddress(hosts[i])
+        log.warn(resolved)
+        hosts[i] = resolved
+      end 
+    end
 
     options[:load_balancing_policy] = ::Cassandra::LoadBalancing::Policies::WhiteList.new(hosts, ::Cassandra::LoadBalancing::Policies::RoundRobin.new)
     options[:compression]           = :lz4
