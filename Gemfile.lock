@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cassandra-web (0.4.0)
+    cassandra-web (0.5.0)
       cassandra-driver (~> 3.1)
       lz4-ruby (~> 0.3)
       rack-cors (~> 0.2)
@@ -44,4 +44,4 @@ DEPENDENCIES
   rake (~> 10.0)
 
 BUNDLED WITH
-   1.16.1
+   1.17.3

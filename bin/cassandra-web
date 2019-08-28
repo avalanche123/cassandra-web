@@ -4,6 +4,9 @@ require 'optparse'
 require 'logger'
 require 'thread'
 
+require 'resolv'
+require 'ipaddr'
+
 class CLI
   module Helpers
     def cluster
@@ -67,9 +70,25 @@ class CLI
 
       options[name] = value
     end
-
-    hosts = Array(options[:hosts])
-    hosts << '127.0.0.1' if hosts.empty?
+    
+    # add DNS resolution
+    hosts = []
+    if options.empty? || Array(options[:hosts]).empty?
+      hosts << '127.0.0.1'
+    else
+      Array(options[:hosts]).each do |host|
+        case host
+        when ::IPAddr
+          hosts << host
+        when ::String # ip address or hostname
+          Resolv.each_address(host) do |ip|
+            hosts << ::IPAddr.new(ip)
+          end
+        else
+          raise ::ArgumentError, ":hosts must be String or IPAddr, #{host.inspect} given"
+        end
+      end
+    end
 
     options[:load_balancing_policy] = ::Cassandra::LoadBalancing::Policies::WhiteList.new(hosts, ::Cassandra::LoadBalancing::Policies::RoundRobin.new)
     options[:compression]           = :lz4
