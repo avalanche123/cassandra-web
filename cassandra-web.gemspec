@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'cassandra-driver', '~> 3.1'
   s.add_runtime_dependency 'thin',             '~> 1.6'
-  s.add_runtime_dependency 'rack-cors',        '~> 0.2'
+  s.add_runtime_dependency 'rack-cors',        '>= 0.2', '< 2.0'
   s.add_runtime_dependency 'rack-parser',      '~> 0.6'
   s.add_runtime_dependency 'sinatra',          '~> 1.4'
   s.add_runtime_dependency 'lz4-ruby',         '~> 0.3'
