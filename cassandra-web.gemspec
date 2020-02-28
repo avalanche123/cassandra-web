@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'lz4-ruby',         '~> 0.3'
 
   s.add_development_dependency 'bundler', '~> 1.6'
-  s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'rake', '~> 12.3'
 end
