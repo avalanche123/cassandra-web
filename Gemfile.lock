@@ -18,7 +18,7 @@ GEM
     eventmachine (1.2.7)
     ione (1.2.4)
     lz4-ruby (0.3.3)
-    rack (1.6.11)
+    rack (1.6.13)
     rack-cors (1.0.6)
       rack (>= 1.6.0)
     rack-parser (0.7.0)
