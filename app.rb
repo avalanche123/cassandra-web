@@ -20,7 +20,7 @@ class App < Sinatra::Base
     enable  :static
     disable :views
     disable :method_override
-    disable :protection
+    enable :protection
   end
 
   use Rack::Cors do
@@ -33,7 +33,7 @@ class App < Sinatra::Base
     end
   end
 
-  use Rack::Parser, :content_types => {
+  use Rack::Parser, content_types: {
     'application/json'  => JSON.method(:load)
   }
 
