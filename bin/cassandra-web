@@ -81,8 +81,10 @@ class CLI
         when ::IPAddr
           hosts << host
         when ::String # ip address or hostname
-          Resolv.each_address(host) do |ip|
-            hosts << ::IPAddr.new(ip)
+          if !!(host =~ Resolv::IPv4::Regex)
+              hosts << ::IPAddr.new(host)
+          else
+            hosts << ::IPAddr.new(Resolv.getaddress(host))
           end
         else
           raise ::ArgumentError, ":hosts must be String or IPAddr, #{host.inspect} given"
